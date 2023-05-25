@@ -16,3 +16,24 @@ export const getMovieDetails = async movieId => {
   );
   return response.data;
 };
+
+export const getMovieCast = async movieId => {
+  const response = await axios.get(
+    `/movie/${movieId}/credits?language=en-US&api_key=${API_KEY}`
+  );
+  return response.data;
+};
+
+export const getMovieReviews = async movieId => {
+  const response = await axios.get(
+    `/movie/${movieId}/reviews?language=en-US&api_key=${API_KEY}`
+  );
+  return response.data;
+};
+
+export const getMoviesBySearch = async searchQuery => {
+  const response = await axios.get(
+    `/search/movie?query=${searchQuery}&language=en-US&api_key=${API_KEY}`
+  );
+  return response.data;
+};

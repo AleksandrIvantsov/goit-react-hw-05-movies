@@ -5,10 +5,9 @@ import { getMovieDetails } from 'services/api';
 const MovieDetails = () => {
   const [movie, setMovie] = useState({});
   const [genres, setGenres] = useState('');
-  const [posterPath, setPosterPath] = useState('');
 
   const { movieId } = useParams();
-  const { title, vote_average, overview } = movie;
+  const { title, vote_average, overview, poster_path } = movie;
 
   useEffect(() => {
     async function movieDetails() {
@@ -16,7 +15,6 @@ const MovieDetails = () => {
       const movieInfo = await getMovieDetails(movieId);
       setMovie(movieInfo);
       setGenres(movieInfo.genres.map(genre => genre.name).join(', '));
-      setPosterPath(movieInfo.poster_path);
       // setLoader(false);
     }
     movieDetails();
@@ -27,7 +25,7 @@ const MovieDetails = () => {
       <div>
         <div>
           <img
-            src={`https://image.tmdb.org/t/p/w500${posterPath}`}
+            src={poster_path && `https://image.tmdb.org/t/p/w500${poster_path}`}
             alt={title}
           />
         </div>
