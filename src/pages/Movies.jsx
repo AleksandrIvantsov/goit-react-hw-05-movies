@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { getMoviesBySearch } from 'services/api';
+import css from './Movies.module.css';
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('query');
+  const location = useLocation();
   const [movies, setMovies] = useState([]);
   const [query, setQuery] = useState('');
 
@@ -37,6 +39,7 @@ const Movies = () => {
     <>
       <form onSubmit={handleSubmit}>
         <input
+          className={css.input}
           name="searchQuery"
           type="text"
           value={query}
@@ -46,8 +49,10 @@ const Movies = () => {
       </form>
       <ul>
         {movies.map(({ id, title }) => (
-          <li key={id}>
-            <Link to={`${id}`}>{title}</Link>
+          <li className={css.links_list__item} key={id}>
+            <Link to={`${id}`} state={{ from: location }}>
+              {title}
+            </Link>
           </li>
         ))}
       </ul>

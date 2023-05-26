@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Link, Outlet, useParams } from 'react-router-dom';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { getMovieDetails } from 'services/api';
+import css from './MovieDetails.module.css';
 
 const MovieDetails = () => {
   const [movie, setMovie] = useState({});
   const [genres, setGenres] = useState('');
+  const location = useLocation();
+  const backLinkLocationRef = useRef(location.state?.from ?? '/');
 
   const { movieId } = useParams();
   const { title, vote_average, overview, poster_path } = movie;
@@ -21,15 +24,17 @@ const MovieDetails = () => {
   }, [movieId]);
   return (
     <>
-      <button type="button">Go back</button>
-      <div>
-        <div>
+      <Link className={css.goback_button} to={backLinkLocationRef.current}>
+        Go back
+      </Link>
+      <div className={css.container}>
+        <div className={css.image_thumb}>
           <img
             src={poster_path && `https://image.tmdb.org/t/p/w500${poster_path}`}
             alt={title}
           />
         </div>
-        <div>
+        <div className={css.movie_info_container}>
           <h1>{title}</h1>
           <p>User Score: {Math.round(vote_average * 10)}%</p>
           <h2>Overview</h2>
@@ -39,7 +44,7 @@ const MovieDetails = () => {
         </div>
       </div>
       <p>Additional information</p>
-      <ul>
+      <ul className={css.additional_list_links}>
         <li>
           <Link to="cast">Cast</Link>
         </li>
@@ -47,7 +52,9 @@ const MovieDetails = () => {
           <Link to="reviews">Reviews</Link>
         </li>
       </ul>
-      <Outlet />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Outlet />
+      </Suspense>
     </>
   );
 };
